@@ -24,6 +24,12 @@ class BasePage:
     def find_elements(self, locator: Tuple[str, str]) -> List[WebElement]:
         return self.driver.find_elements(*locator)
 
+    def get_attribute(self, locator: Tuple[str, str], attribute: str) -> str:
+        return self.driver.find_element(*locator).get_attribute(attribute)
+
+    def get_validation_message_attribute(self, locator: Tuple[str, str]) -> str:
+        return self.driver.find_element(*locator).get_attribute("validationMessage")
+
     def open(self, url: str) -> None:
         self.driver.get(url)
 

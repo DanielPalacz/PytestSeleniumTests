@@ -1,7 +1,7 @@
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+from typing import Dict
+
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.wait import WebDriverWait
 
 from src.helpers.locators import LocatorBuilder
 from src.pom.common import BasePage
@@ -14,6 +14,15 @@ class RegistryPageLocators:
     EMAIL = LocatorBuilder.id_(value="email")
     REGISTRATION_BUTTON = \
         LocatorBuilder.xpath(value="//form[@id='signUpForm']/button")
+
+    @classmethod
+    def get_form_input_locators(cls) -> Dict:
+        return {
+            "name": cls.NAME,
+            "surname": cls.SURNAME,
+            "phone": cls.PHONE,
+            "email": cls.EMAIL
+        }
 
 
 class RegistryPage(BasePage):
@@ -31,16 +40,28 @@ class RegistryPage(BasePage):
             name: str,
             surname: str,
             phone: str,
-            email: str
+            email: str,
+            expected_to_be_logged: bool = True
     ) -> None:
         self.type(RegistryPageLocators.NAME, name)
         self.type(RegistryPageLocators.SURNAME, surname)
         self.type(RegistryPageLocators.PHONE, phone)
         self.type(RegistryPageLocators.EMAIL, email)
         self.click(RegistryPageLocators.REGISTRATION_BUTTON)
-        self.wait.until(
-            expected_conditions.url_to_be(ConfirmationPage.URL)
-        )
+        if expected_to_be_logged:
+            self.wait.until(
+                expected_conditions.url_to_be(ConfirmationPage.URL)
+            )
+
+    def get_input_validation_messages(self) -> Dict:
+        """
+        example of returned validation Dict:
+        {'name': 'Please fill out this field.', 'surname': '', 'phone': '', 'email': ''}
+        """
+        validation_messages = dict()
+        for k, v in RegistryPageLocators.get_form_input_locators().items():
+            validation_messages.update({k: self.get_validation_message_attribute(v)})
+        return validation_messages
 
 
 class RegistryConfirmationPageLocators:
@@ -49,9 +70,6 @@ class RegistryConfirmationPageLocators:
             value="//h4[contains(text(),"
                   "'Na Twój adres email wysłaliśmy link do aktywacji konta')]"
         )
-
-
-# Na Twój adres email wysłaliśmy link do aktywacji konta
 
 
 class ConfirmationPage(BasePage):
