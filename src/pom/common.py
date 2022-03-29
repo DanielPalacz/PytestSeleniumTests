@@ -1,14 +1,19 @@
 from typing import Tuple, List
 
-from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class BasePage:
 
     def __init__(self, driver: WebDriver):
         self.driver = driver
+        self.wait = WebDriverWait(self.driver, 5, 0.5)
+
+    @property
+    def url(self):
+        return self.driver.current_url
 
     def click(self, locator: Tuple[str, str]) -> None:
         self.driver.find_element(*locator).click()
