@@ -1,6 +1,5 @@
 # PytestSeleniumTests
 ***
-***
 ### A. Requirements
 python 3.8 version (tested with: Python 3.8.10)
 Unix-like OS (tested with Ubuntu 20.04.2 LTS)
