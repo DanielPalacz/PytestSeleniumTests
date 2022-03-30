@@ -9,3 +9,4 @@ venv/
 
 # Reporting
 reports/
+*.html
