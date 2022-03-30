@@ -26,7 +26,7 @@ class TestRegistryFormSanity:
     @pytest.mark.parametrize("surname", ["Kowalski", ""])
     @pytest.mark.parametrize("phone", ["544582596", ""])
     @pytest.mark.parametrize("email", [lazy_fixture("new_email"), ""])
-    def test_did_not_user_register_lack_of_data(self, driver, name, surname, phone, email):
+    def test_user_did_not_register_due_to_lack_of_data(self, driver, name, surname, phone, email):
         # additional skipping condition
         if all([name, surname, phone, email]):
             pytest.skip("test to be skipped because at least 1 input should be missing")
